@@ -4,8 +4,8 @@ import { SplashScreen, Stack, useRouter } from "expo-router";
 import { useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity, useColorScheme } from "react-native";
-import * as SecureStore from 'expo-secure-store';
-import { ClerkProvider, useAuth } from '@clerk/clerk-expo';
+import * as SecureStore from "expo-secure-store";
+import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -13,7 +13,8 @@ export const unstable_settings = {
   initialRouteName: "(tabs)",
 };
 
-const NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+const NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY =
+  process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
 const tokenCache = {
   async getToken(key: string) {
@@ -56,7 +57,10 @@ export default function RootLayout() {
   }
 
   return (
-    <ClerkProvider publishableKey={NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!} tokenCache={tokenCache}>
+    <ClerkProvider
+      publishableKey={NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}
+      tokenCache={tokenCache}
+    >
       <RootLayoutNav />
     </ClerkProvider>
   );
@@ -68,7 +72,7 @@ function RootLayoutNav() {
   // Automatically open login if user is not authenticated
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
-      router.push('../modals/login');
+      router.push("../modals/login");
     }
   }, [isLoaded]);
 
@@ -79,9 +83,18 @@ function RootLayoutNav() {
         name="modals/login"
         options={{
           title: "Log in or Sign up",
-          // headerTitleStyle: {
-          //   fontFamily: "SpaceMono",
-          // },
+          presentation: "modal",
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => router.back()}>
+              <Ionicons name="close-outline" size={28}></Ionicons>
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="modals/signup"
+        options={{
+          title: "Sign Up",
           presentation: "modal",
           headerLeft: () => (
             <TouchableOpacity onPress={() => router.back()}>
@@ -102,7 +115,10 @@ function RootLayoutNav() {
           ),
         }}
       />
-      <Stack.Screen name="listings/[id]" options={{ headerTitle: "" }} />
+      <Stack.Screen
+        name="listings/[id]"
+        options={{ headerTitle: "", headerTransparent: true }}
+      />
     </Stack>
   );
 }
